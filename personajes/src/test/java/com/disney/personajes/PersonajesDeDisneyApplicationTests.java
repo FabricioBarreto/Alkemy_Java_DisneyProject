@@ -1,0 +1,13 @@
+package com.disney.personajes;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class PersonajesDeDisneyApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

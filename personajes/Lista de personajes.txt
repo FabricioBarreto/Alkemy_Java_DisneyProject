@@ -1,0 +1,14 @@
+Personajes:
+Mikey
+Pluto
+El genio
+Timon
+Pumba
+Hercules
+
+Peliculas:
+Aladin
+La Cirenita
+Cenicienta
+El rey leon
+Nemo
