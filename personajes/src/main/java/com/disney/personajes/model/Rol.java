@@ -1,50 +1,39 @@
 package com.disney.personajes.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "rol")
+@Table(name = "roles")
 public class Rol {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String nombre;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-	public Long getId() {
-		return id;
-	}
+    @Column(length = 60)
+    private String nombre;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getNombre() {
-		return nombre;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    public String getNombre() {
+        return nombre;
+    }
 
-	public Rol(Long id, String nombre) {
-		super();
-		this.id = id;
-		this.nombre = nombre;
-	}
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-	public Rol() {
-		
-	}
+    public Rol() {
+    }
 
-	public Rol(String nombre) {
-		super();
-		this.nombre = nombre;
-	}
-
-	
+    public Rol(long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
 }

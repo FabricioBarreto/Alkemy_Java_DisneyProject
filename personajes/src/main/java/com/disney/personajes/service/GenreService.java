@@ -1,18 +1,19 @@
 package com.disney.personajes.service;
 
-import com.disney.personajes.model.Genre;
+import com.disney.personajes.dto.GenreDTO;
+import com.disney.personajes.dto.MovieDTO;
 
 import java.util.List;
 
 public interface GenreService {
 
-    public List<Genre> getAllGenre();
+    public List<GenreDTO> getAllGenre();
 
-    public Genre getGenreById(Long id);
+    public GenreDTO findGenreById(Long id);
 
-    public Genre createGenre(Genre genre);
+    public GenreDTO createGenre(GenreDTO genreDTO);
 
-    public Genre updateGenre(Genre genre);
+    public GenreDTO updateGenre(GenreDTO genreDTO,Long genreId);
 
     public void deleteGenre(Long id);
 

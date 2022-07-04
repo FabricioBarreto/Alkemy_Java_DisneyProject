@@ -1,18 +1,19 @@
 package com.disney.personajes.controller;
 
-import com.disney.personajes.model.Characters;
-import com.disney.personajes.model.Movies;
+import com.disney.personajes.dto.MovieDTO;
 import com.disney.personajes.service.CharactersService;
 import com.disney.personajes.service.MoviesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@RequestMapping("/movies")
 @RestController
+@RequestMapping("/movies")
 public class MoviesController {
 
     @Autowired
@@ -20,55 +21,67 @@ public class MoviesController {
     @Autowired
     CharactersService charactersService;
 
-    @GetMapping
-    private ResponseEntity<?> getMovies(
-            @RequestParam(required = false)String title ,
-            @RequestParam(required = false)Long idGenre){
-
-        if (title != null){
-            return new ResponseEntity<>(moviesService.findByTitle(title), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(moviesService.getAllMovies(), HttpStatus.OK);
-    }
-
-    //Obtener Movies
-    @GetMapping("/{id}")
-    private ResponseEntity<?> getMoviesById(@PathVariable Long id){
-        return new ResponseEntity<>(moviesService.getMoviesById(id),HttpStatus.OK);
-    }
-
-    //Crear Movies
+    //Create Movies
     @PostMapping
-    private ResponseEntity<?> createMovies(@RequestBody @Valid Movies movies){
-        return new ResponseEntity<>(moviesService.createMovies(movies), HttpStatus.CREATED);
+    private ResponseEntity<MovieDTO> createMovies(@Valid @RequestBody MovieDTO movieDTO){
+        return new ResponseEntity<>(moviesService.createMovies(movieDTO), HttpStatus.CREATED);
     }
 
-    //Modificar Movies
-    @PutMapping("/update/{id}")
-    private ResponseEntity<?> updateMovies(@PathVariable Long id,
-                                          @RequestBody Movies dataUpdated) {
-        Movies movies = moviesService.getMoviesById(id);
-        movies.setTitle(dataUpdated.getTitle());
-        movies.setImage(dataUpdated.getImage());
-        movies.setCreation(dataUpdated.getCreation());
-        movies.setQualification(dataUpdated.getQualification());
-        return new ResponseEntity<>(moviesService.updateMovies(movies),HttpStatus.OK);
+    //Get movies
+    @GetMapping
+    private List<MovieDTO> getMovies(@RequestParam(value = "name",required = false)String name,
+                                     @RequestParam(value = "genreId",required = false)Long genreId,
+                                     @RequestParam(value = "order",defaultValue = "ASC",required = false)String order){
+        if (name != null){
+            return moviesService.findByTitle(name);
+        }
+        if (genreId != null){
+            return moviesService.findByGenreId(genreId);
+        }
+        return moviesService.getAllMovies(order);
     }
 
-    //Eliminar Movies
-    @DeleteMapping("/delete/{id}")
-    private void deleteMovies(@PathVariable Long id){
+    //Update Movies
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    private ResponseEntity<MovieDTO> updateMovies(@PathVariable Long id,
+                                          @Valid @RequestBody MovieDTO movieDTO) {
+        MovieDTO movieResponse = moviesService.updateMovies(movieDTO,id);
+        return new ResponseEntity<>(movieResponse,HttpStatus.OK);
+    }
+
+    //Delete Movies
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    private ResponseEntity<String> deleteMovies(@PathVariable Long id){
         moviesService.deleteMovies(id);
+        return new ResponseEntity<>("Successfully removed movie",HttpStatus.OK);
     }
 
-    //Agregar Character a Movies
-    @PostMapping("/{idMovie}/characters/{idCharacters}")
-    private void addCharacters(@PathVariable Long idMovie,
-                               @PathVariable Long idCharacters){
-        Movies movie = moviesService.getMoviesById(idMovie);
-        Characters characters = charactersService.getCharactersById(idCharacters);
-        movie.addCharacter(characters);
-        charactersService.updateCharacters(characters);
-        moviesService.updateMovies(movie);
+    //Add to Gender
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("genre/{genreId}/movie/{movieId}")
+    public ResponseEntity<?> addToGender(@PathVariable (value = "genreId") Long genreId,
+                                        @PathVariable (value = "movieId")Long movieId) {
+        moviesService.addToGender(genreId,movieId);
+        return new ResponseEntity<>("Given gender",HttpStatus.OK);
+    }
+
+    //Add Character to Movie
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("add/{movieId}/characters/{characterId}")
+    private ResponseEntity<String> addCharactersToMovie(@PathVariable(value = "movieId") Long movieId,
+                                                        @PathVariable(value = "characterId") Long characterId){
+        moviesService.addCharacterToMovie(movieId,characterId);
+        return new ResponseEntity<>("Character added successfully",HttpStatus.OK);
+    }
+
+    //Remove Character to Movie
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("delete/{movieId}/characters/{characterId}")
+    private ResponseEntity<String> deleteCharactersToMovie(@PathVariable(value = "movieId") Long movieId,
+                                                           @PathVariable(value = "characterId") Long characterId){
+        moviesService.removeCharacterToMovie(movieId,characterId);
+        return new ResponseEntity<>("Successfully removed Character",HttpStatus.OK);
     }
 }

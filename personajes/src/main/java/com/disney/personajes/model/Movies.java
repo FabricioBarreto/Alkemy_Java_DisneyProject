@@ -1,12 +1,16 @@
 package com.disney.personajes.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity(name = "movies")
@@ -25,24 +29,16 @@ public class Movies {
 
     private Integer qualification;
 
-    @JsonIgnore
+    private Long genreId;
+
+    @JoinTable(name = "movies_characters",joinColumns = @JoinColumn(name = "character_id",referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id",referencedColumnName = "id"))
     @ManyToMany(cascade = {
-        CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "movies_characters",
-            joinColumns = {@JoinColumn(name = "fk_movies",nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "fk_characters",nullable = false)}
-    )
-    private List<Characters> characters = new ArrayList<Characters>();
+            CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
+    private Set<Characters> characters = new HashSet<>();
 
-    public void addCharacter(Characters character){
+    public void addCharacter(Characters character) {
         characters.add(character);
-        character.getMovies().add(this);
-    }
-
-    public void putCharacters(Characters character){
-        characters.remove(character);
-        character.getMovies().remove(this);
     }
 
 }

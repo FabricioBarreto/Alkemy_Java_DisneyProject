@@ -1,21 +1,28 @@
 package com.disney.personajes.service;
 
-import com.disney.personajes.model.Movies;
+import com.disney.personajes.dto.MovieDTO;
 
 import java.util.List;
 
 public interface MoviesService {
 
-    public List<Movies> getAllMovies();
+    public List<MovieDTO> getAllMovies(String order);
 
-    public Movies getMoviesById(Long id);
+    public MovieDTO findMovieById(Long id);
 
-    public Movies createMovies(Movies movies);
+    public MovieDTO createMovies(MovieDTO movieDTO);
 
-    public Movies updateMovies(Movies movies);
+    public MovieDTO updateMovies(MovieDTO movieDTO,Long movieId);
 
     public void deleteMovies(Long id);
 
-    List<Movies> findByTitle(String title);
+    List<MovieDTO> findByTitle(String title);
 
+    public void addToGender(Long genreId,Long movieId);
+
+    public void addCharacterToMovie(Long movieId,Long characterId);
+
+    public void removeCharacterToMovie(Long movieId,Long characterId);
+
+    public List<MovieDTO> findByGenreId(Long genreId);
 }

@@ -1,11 +1,15 @@
 package com.disney.personajes.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Table(name = "characters")
@@ -26,7 +30,10 @@ public class Characters {
 
     private String history;
 
-    @OrderBy("title ASC")
+    private Long movieId;
+
+    @JsonIgnore
     @ManyToMany(mappedBy = "characters")
-    private List<Movies> movies = new ArrayList<Movies>();
+    private List<Movies> movies = new ArrayList<>();
+
 }

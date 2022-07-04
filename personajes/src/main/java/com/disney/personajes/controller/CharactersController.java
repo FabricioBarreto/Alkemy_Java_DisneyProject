@@ -1,12 +1,16 @@
 package com.disney.personajes.controller;
 
-import com.disney.personajes.model.Characters;
+import com.disney.personajes.dto.CharacterDTO;
 import com.disney.personajes.service.MoviesService;
 import com.disney.personajes.service.CharactersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/characters")
@@ -18,46 +22,45 @@ public class CharactersController {
     @Autowired
     MoviesService moviesService;
 
-    public CharactersController(CharactersService charactersService, MoviesService moviesService){
-        this.charactersService = charactersService;
-        this.moviesService = moviesService;
-    }
-
-    //Obtener personajes
-    @GetMapping
-    private ResponseEntity<?> getAllCharacters(@RequestParam(required = false) String name,
-                                               @RequestParam(required = false) Integer age,
-                                               @RequestParam(required = false) Long idMovie){
-        if (name != null){
-            return new ResponseEntity<>(charactersService.getCharactersByName(name), HttpStatus.OK);
-        }else if(age != null){
-            return new ResponseEntity<>(charactersService.getCharacterByAge(age), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(charactersService.getAllCharacters(), HttpStatus.OK);
-    }
-
-    //Crear personajes
+    //Create Characters
     @PostMapping
-    private ResponseEntity<?> createCharacters(@RequestBody Characters characters){
-        return new ResponseEntity<>(charactersService.createCharacters(characters),HttpStatus.CREATED);
+    private ResponseEntity<CharacterDTO> createCharacters(@Valid @RequestBody CharacterDTO characterDTO){
+        return new ResponseEntity<>(charactersService.createCharacters(characterDTO),HttpStatus.CREATED);
     }
 
-    //Modificar personajes
+    //Get Characters
+    @GetMapping
+    private List<CharacterDTO> getAllCharacters(@RequestParam(value = "name",required = false) String name,
+                                                @RequestParam(value = "age",required = false) Integer age,
+                                                @RequestParam(value = "movieId",required = false) Long movieId){
+        if (name != null){
+            return charactersService.getCharactersByName(name);
+        }
+        if(age != null){
+            return charactersService.getCharacterByAge(age);
+        }
+        if(movieId != null){
+            return charactersService.findCharactersByMovieId(movieId);
+        }
+        return charactersService.getAllCharacters();
+    }
+
+    //Update Characters
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    private ResponseEntity<?> updateCharacters(@PathVariable Long id,
-                                           @RequestBody Characters dataUpdated) {
-        Characters characters = charactersService.getCharactersById(id);
-        characters.setImage(dataUpdated.getImage());
-        characters.setName(dataUpdated.getName());
-        characters.setAge(dataUpdated.getAge());
-        characters.setWeight(dataUpdated.getWeight());
-        characters.setHistory(dataUpdated.getHistory());
-        return new ResponseEntity<>(charactersService.updateCharacters(characters),HttpStatus.OK);
+    public ResponseEntity<CharacterDTO> updateCharacter(@PathVariable Long id,
+                                                              @Valid @RequestBody CharacterDTO characterDTO){
+
+        CharacterDTO charactersResponse = charactersService.updateCharacters(characterDTO,id);
+
+        return new ResponseEntity<>(charactersResponse,HttpStatus.OK);
     }
 
-    //Eliminar Characters
+    //Delete Characters
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    private void deleteCharacters(@PathVariable Long id){
+    public ResponseEntity<String> deleteCharacters(@PathVariable Long id){
         charactersService.deleteCharacters(id);
+        return new ResponseEntity<>("character removed successfully",HttpStatus.OK);
     }
 }

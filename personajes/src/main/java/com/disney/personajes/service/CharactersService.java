@@ -1,23 +1,24 @@
 package com.disney.personajes.service;
 
-import com.disney.personajes.model.Characters;
-import com.disney.personajes.model.Movies;
+import com.disney.personajes.dto.CharacterDTO;
 
 import java.util.List;
 
 public interface CharactersService {
 
-    public Characters createCharacters(Characters characters);
+    public CharacterDTO createCharacters(CharacterDTO charactersDTO);
 
-    public List<Characters> getAllCharacters();
+    public List<CharacterDTO> getAllCharacters();
 
-    public Characters getCharactersById(Long id);
+    public CharacterDTO findCharacterById(Long id);
 
-    public Characters updateCharacters(Characters characters);
+    public CharacterDTO updateCharacters(CharacterDTO characterDTO,Long id);
 
     public void deleteCharacters(Long id);
 
-    List<Characters> getCharactersByName(String name);
+    public List<CharacterDTO> getCharactersByName(String name);
 
-    List<Characters> getCharacterByAge(Integer age);
+    public List<CharacterDTO> getCharacterByAge(Integer age);
+
+    public List<CharacterDTO> findCharactersByMovieId(Long movieId);
 }

@@ -1,12 +1,16 @@
 package com.disney.personajes.controller;
 
-import com.disney.personajes.model.Genre;
+import com.disney.personajes.dto.GenreDTO;
 import javax.validation.Valid;
+
 import com.disney.personajes.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/genre")
@@ -15,33 +19,34 @@ public class GenreController {
     @Autowired
     GenreService genreService;
 
+    //Create Genre
+    @PostMapping
+    private ResponseEntity<GenreDTO> createGenre(@Valid @RequestBody GenreDTO genreDTO){
+        return new ResponseEntity<>(genreService.createGenre(genreDTO), HttpStatus.CREATED);
+    }
+
+    //Get Genre
     @GetMapping
-    private ResponseEntity<?> getAllGenre(){
-        return new ResponseEntity<>(genreService.getAllGenre(), HttpStatus.OK);
+    private List<GenreDTO> getAllGenre(){
+        return genreService.getAllGenre();
     }
 
-    @GetMapping("/{id}")
-    private ResponseEntity<?> getGenreById(@PathVariable Long id){
-        return new ResponseEntity<>(genreService.getGenreById(id),HttpStatus.OK);
+    //Update Genre
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    private ResponseEntity<GenreDTO> updateGenre(@PathVariable Long id,
+                                                 @Valid @RequestBody GenreDTO genreDTO) {
+        GenreDTO genreResponse = genreService.updateGenre(genreDTO,id);
+
+        return new ResponseEntity<>(genreResponse,HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    private ResponseEntity<?> createGenre(@RequestBody @Valid Genre genre){
-        return new ResponseEntity<>(genreService.createGenre(genre), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/update/{id}")
-    private ResponseEntity<?> updateGenre(@PathVariable Long id,
-            @RequestBody Genre dataUpdated) {
-        Genre genre = genreService.getGenreById(id);
-        genre.setName(dataUpdated.getName());
-        genre.setImage(dataUpdated.getImage());
-        return new ResponseEntity<>(genreService.updateGenre(genre),HttpStatus.OK);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    private void deleteGenre(@PathVariable Long id){
+    //Delete Genre
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    private ResponseEntity<String> deleteGenre(@PathVariable Long id){
         genreService.deleteGenre(id);
+        return new ResponseEntity<>("Successfully removed genre",HttpStatus.OK);
     }
 
 }
