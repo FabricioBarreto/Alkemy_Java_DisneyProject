@@ -23,7 +23,6 @@ com\disney\personajes\excepcions\ResourceNotFoundException.class
 com\disney\personajes\security\JWTAuthResonseDTO.class
 com\disney\personajes\service\GenreService.class
 com\disney\personajes\service\impl\GenreServiceImpl.class
-com\disney\personajes\exeptions\ResourceNotFoundException.class
 com\disney\personajes\dto\RegistroDTO.class
 com\disney\personajes\model\Usuario.class
 com\disney\personajes\security\CustomUserDetailsService.class

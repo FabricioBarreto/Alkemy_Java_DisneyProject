@@ -2,34 +2,34 @@ package com.disney.personajes.security;
 
 public class JWTAuthResonseDTO {
 
-    private String tokenDeAcceso;
-    private String tipoDeTokem = "Bearer";
+	private String tokenDeAcceso;
+	private String tipoDeToken = "Bearer";
 
-    public JWTAuthResonseDTO(String tokenDeAcceso) {
-        this.tokenDeAcceso = tokenDeAcceso;
-    }
+	public JWTAuthResonseDTO(String tokenDeAcceso) {
+		super();
+		this.tokenDeAcceso = tokenDeAcceso;
+	}
 
-    public String getTokenDeAcceso() {
-        return tokenDeAcceso;
-    }
+	public JWTAuthResonseDTO(String tokenDeAcceso, String tipoDeToken) {
+		super();
+		this.tokenDeAcceso = tokenDeAcceso;
+		this.tipoDeToken = tipoDeToken;
+	}
 
-    public void setTokenDeAcceso(String tokenDeAcceso) {
-        this.tokenDeAcceso = tokenDeAcceso;
-    }
+	public String getTokenDeAcceso() {
+		return tokenDeAcceso;
+	}
 
-    public String getTipoDeTokem() {
-        return tipoDeTokem;
-    }
+	public void setTokenDeAcceso(String tokenDeAcceso) {
+		this.tokenDeAcceso = tokenDeAcceso;
+	}
 
-    public void setTipoDeTokem(String tipoDeTokem) {
-        this.tipoDeTokem = tipoDeTokem;
-    }
+	public String getTipoDeToken() {
+		return tipoDeToken;
+	}
 
-    public JWTAuthResonseDTO() {
-    }
+	public void setTipoDeToken(String tipoDeToken) {
+		this.tipoDeToken = tipoDeToken;
+	}
 
-    public JWTAuthResonseDTO(String tokenDeAcceso, String tipoDeTokem) {
-        this.tokenDeAcceso = tokenDeAcceso;
-        this.tipoDeTokem = tipoDeTokem;
-    }
 }

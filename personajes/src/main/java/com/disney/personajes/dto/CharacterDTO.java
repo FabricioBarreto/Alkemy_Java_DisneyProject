@@ -1,8 +1,6 @@
 package com.disney.personajes.dto;
 
 import com.disney.personajes.model.Movies;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;

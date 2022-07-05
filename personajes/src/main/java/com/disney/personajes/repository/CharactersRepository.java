@@ -1,9 +1,7 @@
 package com.disney.personajes.repository;
 
 import com.disney.personajes.model.Characters;
-import com.disney.personajes.model.Movies;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 

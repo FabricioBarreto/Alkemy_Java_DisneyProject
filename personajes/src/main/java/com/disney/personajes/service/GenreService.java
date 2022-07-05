@@ -1,7 +1,6 @@
 package com.disney.personajes.service;
 
 import com.disney.personajes.dto.GenreDTO;
-import com.disney.personajes.dto.MovieDTO;
 
 import java.util.List;
 

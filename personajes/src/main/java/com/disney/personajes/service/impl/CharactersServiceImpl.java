@@ -1,7 +1,7 @@
 package com.disney.personajes.service.impl;
 
 import com.disney.personajes.dto.CharacterDTO;
-import com.disney.personajes.exeptions.ResourceNotFoundException;
+import com.disney.personajes.excepcions.ResourceNotFoundException;
 import com.disney.personajes.model.Characters;
 import com.disney.personajes.model.Movies;
 import com.disney.personajes.repository.CharactersRepository;
